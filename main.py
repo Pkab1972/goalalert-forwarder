@@ -1,18 +1,18 @@
-import asyncio
 import os
-from pyrogram import Client, filters
+from telethon import TelegramClient, events
+from telethon.sessions import StringSession
 
-API_ID = int(os.environ.get("API_ID", "33309973"))
-API_HASH = os.environ.get("API_HASH", "3e4359da0ec8656b02e28beeca07a0ca")
+API_ID = 33309973
+API_HASH = "3e4359da0ec8656b02e28beeca07a0ca"
 SESSION_STRING = os.environ.get("SESSION_STRING", "")
-SOURCE_CHAT = os.environ.get("SOURCE_CHAT", "")
-TARGET_CHAT = os.environ.get("TARGET_CHAT", "Staging2")
+SOURCE = "InplayGuruBot"
+TARGET = "Staging2"
 
-app = Client("forwarder", api_id=API_ID, api_hash=API_HASH, session_string=SESSION_STRING)
+client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
-@app.on_message(filters.chat(SOURCE_CHAT))
-async def forward(client, message):
-    await message.forward(TARGET_CHAT)
+@client.on(events.NewMessage(chats=SOURCE))
+async def handler(event):
+    await client.forward_messages(TARGET, event.message)
 
-print("Userbot running...")
-app.run()
+client.start()
+client.run_until_disconnected()
