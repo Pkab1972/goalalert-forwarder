@@ -10,7 +10,7 @@ TARGET = -4361831458
 
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
-@client.on(events.NewMessage(chats=SOURCE))
+@client.on(events.NewMessage())
 async def handler(event):
     print(f"Received from {event.chat_id}")
     await client.forward_messages(TARGET, event.message)
