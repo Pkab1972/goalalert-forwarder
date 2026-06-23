@@ -5,16 +5,15 @@ from telethon.sessions import StringSession
 API_ID = 33309973
 API_HASH = "3e4359da0ec8656b02e28beeca07a0ca"
 SESSION_STRING = os.environ.get("SESSION_STRING", "")
-SOURCE = 1757874218
 TARGET = -4361831458
 
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
-@client.on(events.NewMessage())
+@client.on(events.NewMessage(incoming=True, from_users="InPlayGuruBot"))
 async def handler(event):
-    print(f"Received from {event.chat_id}")
+    print(f"Received from InPlayGuruBot")
     await client.forward_messages(TARGET, event.message)
-    print(f"Forwarded to {TARGET}")
+    print(f"Forwarded!")
 
 client.start()
 client.run_until_disconnected()
