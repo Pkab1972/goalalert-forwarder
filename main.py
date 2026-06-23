@@ -12,7 +12,8 @@ client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
 @client.on(events.NewMessage(chats=SOURCE))
 async def handler(event):
+    print(f"Received message from {event.chat_id}")
     await client.forward_messages(TARGET, event.message)
-
+    print(f"Forwarded to {TARGET}")
 client.start()
 client.run_until_disconnected()
