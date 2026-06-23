@@ -10,7 +10,7 @@ TARGET = -4361831458
 client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
 @client.on(events.NewMessage(incoming=True, from_users="InPlayGuruBot"))
-async def handler(event):
+@client.on(events.NewMessage())
     print(f"Received from InPlayGuruBot")
     await client.forward_messages(TARGET, event.message)
     print(f"Forwarded!")
