@@ -1,4 +1,5 @@
 import os
+import aiohttp
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 
@@ -12,8 +13,7 @@ client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
 
 @client.on(events.NewMessage(chats=SOURCE))
 async def handler(event):
-    print(f"InPlayGuru alert received!")
-    import aiohttp
+    print(f"Message received: {event.raw_text[:50]}")
     async with aiohttp.ClientSession() as session:
         await session.post(TARGET, data={"text": event.raw_text})
     print(f"Sent to Make.com!")
