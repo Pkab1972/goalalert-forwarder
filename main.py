@@ -15,23 +15,22 @@ STAGING3_CHAT_ID = -5514769696
 async def main():
     while True:
         try:
-            client = TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH)
+            async with TelegramClient(StringSession(SESSION_STRING), API_ID, API_HASH) as client:
+                @client.on(events.NewMessage())
+                async def handler(event):
+                    if event.chat_id not in [INPLAYGURU_CHAT_ID, STAGING3_CHAT_ID]:
+                        return
+                    print(f"Message received from chat {event.chat_id}")
+                    async with aiohttp.ClientSession() as session:
+                        await session.post(WEBHOOK_URL, data={"text": event.raw_text})
+                    print("Sent to Make.com!")
 
-            @client.on(events.NewMessage())
-            async def handler(event):
-                if event.chat_id not in [INPLAYGURU_CHAT_ID, STAGING3_CHAT_ID]:
-                    return
-                print(f"Message received from chat {event.chat_id}")
-                print(f"Text: {event.raw_text[:100]}")
-                async with aiohttp.ClientSession() as session:
-                    await session.post(WEBHOOK_URL, data={"text": event.raw_text})
-                print("Sent to Make.com!")
-
-            await client.start()
-            print("Client started, listening...")
-            await client.run_until_disconnected()
+                print("Client started, listening...")
+                await client.run_until_disconnected()
         except Exception as e:
-            print(f"Error: {e} — reconnecting in 5 seconds...")
-            await asyncio.sleep(5)
+            print(f"Error: {e}")
+        finally:
+            print("Reconnecting in 10 seconds...")
+            await asyncio.sleep(10)
 
 asyncio.run(main())
