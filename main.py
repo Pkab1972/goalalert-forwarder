@@ -1,6 +1,7 @@
 import os
 import aiohttp
 import asyncio
+from aiohttp import web
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 
@@ -11,6 +12,9 @@ WEBHOOK_URL = "https://hook.eu1.make.com/yrt1lwvqk1cq2dwaaxly3f60vux7wond"
 
 INPLAYGURU_CHAT_ID = 1757874218
 STAGING3_CHAT_ID = -5514769696
+
+async def health(request):
+    return web.Response(text="OK")
 
 async def main():
     while True:
@@ -32,4 +36,14 @@ async def main():
             print("Reconnecting in 10 seconds...")
             await asyncio.sleep(10)
 
-asyncio.run(main())
+app = web.Application()
+app.router.add_get('/', health)
+
+async def start():
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', 8080)
+    await site.start()
+    await main()
+
+asyncio.run(start())
