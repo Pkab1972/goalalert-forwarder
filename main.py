@@ -22,7 +22,7 @@ async def main():
                         return
                     print(f"Message received from chat {event.chat_id}")
                     async with aiohttp.ClientSession() as session:
-                        await session.post(WEBHOOK_URL, data={"text": event.raw_text})
+                        await session.post(WEBHOOK_URL, json={"text": event.raw_text})
                     print("Sent to Make.com!")
 
                 print("Client started, listening...")
