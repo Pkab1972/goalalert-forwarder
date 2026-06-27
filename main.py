@@ -7,7 +7,7 @@ from telethon.sessions import StringSession
 API_ID = 33309973
 API_HASH = "3e4359da0ec8656b02e28beeca07a0ca"
 SESSION_STRING = os.environ.get("SESSION_STRING", "")
-WEBHOOK_URL = "https://hook.eu1.make.com/yrt1lwvqk1cq2dwaaxly3f60vux7wond..."
+WEBHOOK_URL = "https://hook.eu1.make.com/yrt1lwvqk1cq2dwaaxly3f60vux7wond"
 
 INPLAYGURU_CHAT_ID = 1757874218
 STAGING3_CHAT_ID = -5514769696
@@ -24,7 +24,6 @@ async def main():
                     async with aiohttp.ClientSession() as session:
                         await session.post(WEBHOOK_URL, json={"text": event.raw_text})
                     print("Sent to Make.com!")
-
                 print("Client started, listening...")
                 await client.run_until_disconnected()
         except Exception as e:
